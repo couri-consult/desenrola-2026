@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Painel analítico sobre o Novo Desenrola Brasil (MP 1.355/2026) — material de preparação para participação em TV.">
+<title>Novo Desenrola Brasil — Painel Analítico</title>
+<style>
+  /* === TOKENS DE IDENTIDADE VISUAL === */
+  :root {
+    --bg:     #ffffff;
+    --panel:  #f7f7f5;
+    --ink:    #1a1a1a;
+    --muted:  #5b5b5b;
+    --accent: #003d6b;
+    --warn:   #b8460e;
+    --good:   #1f6e3d;
+    --bad:    #a4243b;
+    --line:   #d8d8d4;
+    --hl:     #fff7d6;
+  }
+
+  /* === RESET E BASE === */
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px; line-height: 1.5;
+  }
+
+  /* === LAYOUT === */
+  .layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  main { padding: 28px 36px; max-width: 1100px; }
+
+  /* === NAV LATERAL === */
+  nav {
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 18px 0;
+    position: sticky; top: 0;
+    height: 100vh; overflow-y: auto;
+  }
+  nav .brand { padding: 0 18px; margin-bottom: 18px; }
+  nav h1 { font-size: 13px; margin: 0 0 2px 0; color: var(--accent); letter-spacing: 0.5px; }
+  nav .sub { font-size: 11px; color: var(--muted); }
+  nav ul { list-style: none; margin: 0; padding: 0; }
+  nav li a {
+    display: block; padding: 8px 18px;
+    color: var(--ink); text-decoration: none; font-size: 13px;
+    border-left: 3px solid transparent;
+  }
+  nav li a:hover { background: #ececea; }
+  nav li a.active { background: #ececea; border-left-color: var(--accent); font-weight: 600; }
+
+  /* === TIPOGRAFIA === */
+  h2 {
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 6px; margin-top: 0; font-size: 22px;
+  }
+  h3 { color: var(--ink); margin-top: 28px; font-size: 16px; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  h4 { font-size: 14px; margin: 18px 0 6px 0; color: var(--accent); }
+  p { margin: 8px 0; }
+  a { color: var(--accent); }
+
+  /* === SEÇÕES === */
+  .section { display: none; }
+  .section.active { display: block; }
+  .header-bar { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .meta { font-size: 11px; color: var(--muted); }
+
+  /* === KPI CARDS === */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px; margin: 14px 0;
+  }
+  .kpi {
+    background: var(--panel); padding: 12px;
+    border-left: 4px solid var(--accent); border-radius: 3px;
+  }
+  .kpi.warn { border-left-color: var(--warn); }
+  .kpi.bad  { border-left-color: var(--bad); }
+  .kpi.good { border-left-color: var(--good); }
+  .kpi .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi .value { font-size: 22px; font-weight: 700; color: var(--ink); margin: 4px 0; font-variant-numeric: tabular-nums; }
+  .kpi .delta { font-size: 11px; color: var(--muted); }
+
+  /* === TABELAS === */
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; }
+  th, td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--panel); font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* === CALLOUT === */
+  .callout {
+    background: var(--hl); border-left: 4px solid var(--warn);
+    padding: 12px 16px; margin: 14px 0; border-radius: 3px;
+  }
+  .callout strong { color: var(--warn); }
+
+  /* === THESIS BOX === */
+  .thesis {
+    background: #eef4f8; border: 1px solid var(--accent);
+    padding: 14px 18px; margin: 16px 0; border-radius: 4px;
+  }
+  .thesis .tag { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+  /* === CENÁRIOS === */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 16px 0; }
+  .scenario { background: var(--panel); padding: 14px; border-radius: 4px; border-top: 4px solid var(--accent); }
+  .scenario.alt { border-top-color: var(--warn); }
+  .scenario h4 { margin-top: 0; }
+
+  /* === GRID 3 COLUNAS === */
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .grid-3 .col { background: var(--panel); padding: 10px 12px; border-radius: 3px; font-size: 12.5px; }
+  .grid-3 .col strong { color: var(--accent); display: block; margin-bottom: 4px; font-size: 13px; }
+
+  /* === PILLS === */
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .pill.green { background: #d4ead6; color: #1f5a31; }
+  .pill.red   { background: #f0d4d8; color: #6b1f2c; }
+  .pill.bb    { background: #fde8d4; color: #6b3410; }
+
+  /* === UTILITÁRIOS === */
+  ul.tight { margin: 6px 0; padding-left: 22px; }
+  ul.tight li { margin: 4px 0; }
+  .src { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 6px; }
+  blockquote {
+    margin: 12px 0; padding: 10px 14px; border-left: 3px solid var(--accent);
+    background: var(--panel); font-style: italic; color: var(--ink);
+  }
+  blockquote cite { display: block; margin-top: 6px; font-size: 11px; color: var(--muted); font-style: normal; }
+  .commentary { font-size: 14.5px; line-height: 1.65; }
+  .commentary p { margin: 12px 0; }
+
+  /* === RESPONSIVO === */
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    nav { position: relative; height: auto; }
+    main { padding: 16px; }
+    .two-col, .grid-3 { grid-template-columns: 1fr; }
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+
+  /* === PRINT === */
+  @media print {
+    nav { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    .section { display: block !important; page-break-after: always; }
+    p, li { orphans: 3; widows: 3; }
+    h2, h3, h4 { page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- === NAV LATERAL === -->
+  <nav>
+    <div class="brand">
+      <h1>NOVO DESENROLA BRASIL</h1>
+      <div class="sub">MP 1.355/2026 · Painel analítico · Maio/2026</div>
+    </div>
+    <ul>
+      <li><a href="#secao1" class="navlink active">1. Visão geral &amp; regras</a></li>
+      <li><a href="#secao2" class="navlink">2. Racional econômico</a></li>
+      <li><a href="#secao3" class="navlink">3. Comparativo 2023 × 2026</a></li>
+      <li><a href="#secao4" class="navlink">4. Endividamento das famílias</a></li>
+      <li><a href="#secao5" class="navlink">5. Mecânica fiscal</a></li>
+      <li><a href="#secao6" class="navlink">6. Ponto de vista dos bancos</a></li>
+      <li><a href="#secao7" class="navlink">7. FGTS &amp; poupança nacional</a></li>
+      <li><a href="#secao8" class="navlink">8. Risco moral &amp; bom pagador</a></li>
+      <li><a href="#secao9" class="navlink">9. Histórico de programas</a></li>
+      <li><a href="#secao10" class="navlink">10. Comentário consolidado</a></li>
+      <li><a href="#secao11" class="navlink">11. Pontos abertos para o debate</a></li>
+      <li><a href="#fontes" class="navlink">N. Fontes &amp; Glossário</a></li>
+    </ul>
+  </nav>
+
+  <!-- === CONTEÚDO PRINCIPAL === -->
+  <main>
+
+    <!-- === SEÇÃO 1 — VISÃO GERAL === -->
+    <section id="secao1" class="section active">
+      <div class="header-bar">
+        <h2>1. Visão geral &amp; regras do programa</h2>
+        <span class="meta">MP 1.355/2026 · assinada em 04/05/2026</span>
+      </div>
+
+      <div class="thesis">
+        <span class="tag">Bottom line</span>
+        <p style="margin: 6px 0 0 0;">
+          O Novo Desenrola é um programa de 90 dias que combina renegociação com desconto de até 90%, originação de crédito novo a juro tetado e uso parcial do FGTS. Opera por garantia pública (FGO), sem aporte direto do Tesouro no momento da concessão.
+        </p>
+      </div>
+
+      <h3>Indicadores-chave</h3>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="label">Vigência</div>
+          <div class="value">90 dias</div>
+          <div class="delta">mai/2026 → ago/2026</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Desconto máximo</div>
+          <div class="value">90%</div>
+          <div class="delta">conforme tipo e tempo de atraso</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Juro teto</div>
+          <div class="value">1,99% a.m.</div>
+          <div class="delta">≈ 26,8% a.a. — crédito reestruturado</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Limite por dívida</div>
+          <div class="value">R$ 15 mil</div>
+          <div class="delta">por pessoa, por instituição</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Público potencial</div>
+          <div class="value">100+ mi</div>
+          <div class="delta">estimativa BCB / Min. Fazenda</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Renda alvo</div>
+          <div class="value">≤ 5 SM</div>
+          <div class="delta">R$ 8.105 mensais</div>
+        </div>
+      </div>
+
+      <h3>Eixos do programa</h3>
+      <table>
+        <thead>
+          <tr><th>Eixo</th><th>Regra-chave</th><th>Detalhe</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Famílias</strong></td>
+            <td>Renegociação de dívidas contraídas até 31/01/2026, em atraso entre 90 dias e 2 anos. Crédito pessoal, cartão e cheque especial.</td>
+            <td>Renda ≤ 5 SM; descontos 30%–90%</td>
+          </tr>
+          <tr>
+            <td><strong>Crédito novo</strong></td>
+            <td>Juros máx. 1,99% a.m., prazo até 48 meses, parcela mín. R$ 50, carência de 30 dias para 1ª parcela.</td>
+            <td>Limite R$ 15 mil/instituição</td>
+          </tr>
+          <tr>
+            <td><strong>FGTS</strong></td>
+            <td>Trabalhador pode usar até 20% do saldo OU R$ 1.000 (o que for maior) para abater dívidas.</td>
+            <td>Volume potencial: R$ 8,2 bi</td>
+          </tr>
+          <tr>
+            <td><strong>Fies</strong></td>
+            <td>Estudantes em CadÚnico: até 99% de desconto; demais inscritos: até 77%.</td>
+            <td>Inclui principal, juros e multa</td>
+          </tr>
+          <tr>
+            <td><strong>Empresas</strong></td>
+            <td>ProCred 360 ampliado: carência 12→24 meses; prazo 72→96 meses. Limite p/ MEs (até R$ 4,8 mi receita): R$ 250k → R$ 500k.</td>
+            <td>Faixas: ≤R$ 360k e ≤R$ 4,8 mi</td>
+          </tr>
+          <tr>
+            <td><strong>Rural</strong></td>
+            <td>Desenrola Rural relançado para agricultura familiar, com prazo de renegociação até 20/12/2026.</td>
+            <td>Pronaf · DAP · CAF</td>
+          </tr>
+          <tr>
+            <td><strong>Condicionalidade</strong></td>
+            <td>Adesão exige bloqueio por 12 meses do acesso a plataformas de apostas online (bets).</td>
+            <td>Novidade vs. v1 (2023)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="src">
+        Fontes: Ministério da Fazenda — <a href="https://www.gov.br/fazenda/pt-br/acesso-a-informacao/acoes-e-programas/novo-desenrola-brasil">portal Novo Desenrola Brasil</a>;
+        <a href="https://www.gov.br/casacivil/pt-br/assuntos/noticias/2026/maio/novo-desenrola-do-governo-do-brasil-preve-ate-90-de-desconto-e-facilita-renegociacao-de-dividas">Casa Civil, 04/05/2026</a>;
+        MEC — <a href="https://www.gov.br/mec/pt-br/fies/desenrola-fies">Desenrola Fies</a>;
+        <a href="https://www.gov.br/fazenda/pt-br/acesso-a-informacao/acoes-e-programas/novo-desenrola-brasil/faq/desenrola-empresas">FAQ Desenrola Empresas</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 2 — RACIONAL ECONÔMICO === -->
+    <section id="secao2" class="section">
+      <h2>2. Racional econômico da medida</h2>
+
+      <div class="thesis">
+        <span class="tag">Tese</span>
+        <p style="margin: 6px 0 0 0;">
+          O programa visa um choque de liquidez em famílias super-endividadas e a limpeza de balanços bancários. Ataca o estoque de dívida, sem alterar o fluxo que o produz — juro real elevado, renda apertada e crédito caro.
+        </p>
+      </div>
+
+      <h3>O que o desenho persegue</h3>
+      <ul class="tight">
+        <li><strong>Liberar fluxo de renda</strong> hoje comprometido com serviço de dívida em atraso (média de 29,6% da renda).</li>
+        <li><strong>Descomprimir balanços bancários</strong>: transferir crédito ruim para crédito reestruturado com garantia pública.</li>
+        <li><strong>Reduzir negativação</strong> e devolver acesso ao crédito a parcela da população (efeito demanda + bancarização).</li>
+        <li><strong>Sinalização política</strong> em ano pré-eleitoral, com efeito mensurável no humor do consumidor.</li>
+      </ul>
+
+      <h3>O que a evidência empírica mostra</h3>
+      <blockquote>
+        "O programa atuou sobre o estoque das dívidas, sem alterar a dinâmica de produção de novos endividamentos."
+        <cite>— Banco Central do Brasil, Relatório de Inflação, set/2025 (box sobre Desenrola)</cite>
+      </blockquote>
+      <p>
+        A avaliação do BCB sobre a v1 (2023) é clara: <strong>cada R$ 1 renegociado virou R$ 1,15 em novas dívidas</strong>; <strong>cerca de 30% dos beneficiados voltaram à inadimplência em menos de 12 meses</strong>; e em menos de dois anos depois do encerramento, <strong>o estoque de inadimplência cresceu R$ 61 bilhões</strong>.
+      </p>
+      <p class="src">
+        Fontes: <a href="https://www.bcb.gov.br/content/ri/relatorioinflacao/202509/rpm202509b6p.pdf">BCB · Relatório de Inflação set/2025 (PDF)</a>;
+        <a href="https://crusoe.com.br/variedades/vale-a-pena-economistas-analisam-beneficios-e-problemas-do-desenrola-2-0/">Revista Crusoé — economistas analisam Desenrola 2.0</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 3 — COMPARATIVO === -->
+    <section id="secao3" class="section">
+      <h2>3. Comparativo Desenrola 2023 × Novo Desenrola 2026</h2>
+
+      <table>
+        <thead>
+          <tr><th>Atributo</th><th>Desenrola 2023 (v1)</th><th>Novo Desenrola 2026 (v2)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Instrumento legal</td><td>MP 1.176/2023 → Lei 14.690/2023</td><td>MP 1.355/2026</td></tr>
+          <tr><td>Plataforma</td><td>Centralizada (gov.br + B3)</td><td>Direto nos canais dos bancos</td></tr>
+          <tr><td>Teto de juros</td><td>Sem limite uniforme</td><td><strong>1,99% a.m.</strong> padronizado</td></tr>
+          <tr><td>Prazo máx. crédito novo</td><td>Até 60 meses</td><td>Até 48 meses</td></tr>
+          <tr><td>Limite individual</td><td>Faixa 1: dívidas até R$ 5 mil</td><td><strong>R$ 15 mil</strong> por instituição</td></tr>
+          <tr><td>Uso de FGTS</td><td>Não previsto</td><td><strong>20% do saldo ou R$ 1 mil</strong></td></tr>
+          <tr><td>Bloqueio de bets</td><td>Não previsto</td><td><strong>Sim — 12 meses</strong> obrigatórios</td></tr>
+          <tr><td>Garantia pública</td><td>FGO (~R$ 8 bi)</td><td>FGO R$ 2 bi + autorização +R$ 5 bi</td></tr>
+          <tr><td>Foco</td><td>Volume — alcançar 70 mi negativados</td><td>Cirúrgico — dívidas mais caras / Fies / MPE</td></tr>
+        </tbody>
+      </table>
+
+      <h3>O que sabemos da eficácia da v1</h3>
+      <div class="grid-3">
+        <div class="col"><strong>R$ 53,2 bi</strong>renegociados (2023–2024)</div>
+        <div class="col"><strong>15 milhões</strong>de pessoas atendidas</div>
+        <div class="col"><strong>10 milhões</strong>nomes limpos (dívidas até R$ 100)</div>
+        <div class="col"><strong>R$ 1,15</strong>de nova dívida para cada R$ 1 renegociado</div>
+        <div class="col"><strong>~30%</strong>voltaram à inadimplência em &lt; 12 meses</div>
+        <div class="col"><strong>+R$ 61 bi</strong>de estoque de inadimplência pós-programa</div>
+      </div>
+      <p class="src">
+        Fontes: <a href="https://www.bcb.gov.br/content/ri/relatorioinflacao/202509/rpm202509b6p.pdf">BCB · Relatório de Inflação set/2025</a>;
+        <a href="https://www.portalaz.com.br/noticia/economia/93053/inadimplencia-cresce-alem-do-renegociado-e-anula-efeito-do-desenrola/">Portal AZ — análise BCB sobre eficácia</a>;
+        <a href="https://noticiasconcursos.com.br/desenrola-2-0-x-1-0-veja-as-principais-diferencas-entre-as-versoes-do-programa/">Notícias Concursos — diferenças v1/v2</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 4 — ENDIVIDAMENTO === -->
+    <section id="secao4" class="section">
+      <h2>4. Endividamento das famílias — contexto macro</h2>
+
+      <div class="thesis">
+        <span class="tag">Cenário de partida</span>
+        <p style="margin: 6px 0 0 0;">
+          O programa chega num momento de endividamento e inadimplência em níveis recordes. A demanda por uma medida desse tipo é real; a discussão é se o desenho proposto é o instrumento adequado.
+        </p>
+      </div>
+
+      <h3>Indicadores correntes (mar/2026)</h3>
+      <div class="kpi-grid">
+        <div class="kpi bad">
+          <div class="label">Endividamento (PEIC/CNC)</div>
+          <div class="value">80,4%</div>
+          <div class="delta">vs. 77,1% em mar/2025</div>
+        </div>
+        <div class="kpi bad">
+          <div class="label">Inadimplência (PEIC)</div>
+          <div class="value">12,3%</div>
+          <div class="delta">famílias que não pagam contas</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Comprometimento da renda</div>
+          <div class="value">29,6%</div>
+          <div class="delta">parcela média mensal em dívida</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Tempo médio em atraso</div>
+          <div class="value">7,2 meses</div>
+          <div class="delta">PEIC mar/2026</div>
+        </div>
+        <div class="kpi bad">
+          <div class="label">Negativados (Serasa)</div>
+          <div class="value">82,8 mi</div>
+          <div class="delta">recorde — mar/2026</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Endivid./renda (BCB · SCR)</div>
+          <div class="value">49,9%</div>
+          <div class="delta">fev/2026</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Atenção:</strong> dados PEIC/CNC e Serasa devem ser confirmados nas fontes primárias diretamente antes de citação ao vivo. Verificar na CNC e na Serasa Experian as séries mais recentes na semana da participação.
+      </div>
+      <p class="src">
+        Fontes primárias: BCB; PEIC/CNC; Mapa da Inadimplência Serasa Experian.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 5 — MECÂNICA FISCAL === -->
+    <section id="secao5" class="section">
+      <h2>5. Mecânica fiscal — como o programa "não aparece" no primário</h2>
+
+      <div class="thesis">
+        <span class="tag">Síntese</span>
+        <p style="margin: 6px 0 0 0;">
+          O Novo Desenrola foi engenhado para não comprometer o resultado primário de 2026. O custo existe, é real e vem disfarçado de "operação financeira" lá em 2027–2028, quando o arcabouço estará mais apertado e a próxima gestão tiver que fechar a conta.
+        </p>
+      </div>
+
+      <h3>5.1. As quatro fases do dinheiro</h3>
+      <table>
+        <thead>
+          <tr><th>Fase</th><th>Quem desembolsa</th><th>Impacto no primário</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>0. Capital prévio do FGO</strong><br><span class="meta">R$ 2 bi já no fundo</span></td>
+            <td>Tesouro (dotações antigas)</td>
+            <td><span class="pill green">Zero</span> — já contabilizado</td>
+          </tr>
+          <tr>
+            <td><strong>1. Concessão</strong><br><span class="meta">mai–ago/2026</span></td>
+            <td>Banco origina; FGO garante</td>
+            <td><span class="pill green">Zero</span> — operação privada</td>
+          </tr>
+          <tr>
+            <td><strong>2. Default do reestruturado</strong><br><span class="meta">2027–2029, ~30% reincidência v1</span></td>
+            <td>FGO honra com patrimônio próprio</td>
+            <td><span class="pill green">Zero</span> — dispêndio do fundo</td>
+          </tr>
+          <tr>
+            <td><strong>3. Recomposição do FGO</strong><br><span class="meta">até R$ 5 bi autorizados</span></td>
+            <td>Tesouro aporta ao FGO</td>
+            <td><span class="pill bb">Controverso</span> — financeira p/ STN, primária p/ IFI</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>5.2. A engenharia em cinco movimentos</h3>
+      <ul class="tight">
+        <li><strong>Garantia em vez de subsídio direto</strong> — FGO substitui a transferência, evitando despesa primária explícita.</li>
+        <li><strong>FGO é fundo de natureza privada</strong> (Lei 12.087/2009, administrado pelo BB) — aportes do Tesouro são classificados como operação financeira (abaixo da linha).</li>
+        <li><strong>Capital pré-existente</strong> de R$ 2 bi absorve a primeira onda de honras de garantia, sem novo aporte em 2026.</li>
+        <li><strong>Autorização para até R$ 5 bi adicionais</strong> fica acionável em 2027–2028, fora do orçamento corrente.</li>
+        <li><strong>FGTS de R$ 8,2 bi</strong> é poupança compulsória do trabalhador — não entra na contabilidade fiscal do Tesouro.</li>
+      </ul>
+
+      <h3>5.3. Custo aparente × custo real (cronologia)</h3>
+      <div class="two-col">
+        <div class="scenario">
+          <h4>Custo aparente no primário</h4>
+          <ul class="tight">
+            <li><strong>2026:</strong> ~zero</li>
+            <li><strong>2027:</strong> primeiros aportes possíveis</li>
+            <li><strong>2028:</strong> pode exigir novas autorizações</li>
+            <li><strong>2029:</strong> conta cheia — próxima gestão</li>
+          </ul>
+        </div>
+        <div class="scenario alt">
+          <h4>Contexto fiscal 2026 (IFI · RAF 108, jan/2026)</h4>
+          <ul class="tight">
+            <li>Meta arcabouço: déficit zero (banda ±0,25% PIB)</li>
+            <li>Primário projetado IFI: <strong>déficit de R$ 90,6 bi</strong></li>
+            <li>Gap vs. PLOA: ~R$ 67 bi</li>
+            <li>IFI: arcabouço <strong>"insustentável"</strong> sem ajuste de ~R$ 80 bi</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Controvérsia central:</strong> para a STN, aporte ao FGO é operação de natureza financeira — abaixo da linha. Para a IFI e parte do TCU, se o aporte cobre perdas esperadas (sem retorno provável), funciona como subsídio disfarçado e deveria entrar no primário. O precedente é o Pronampe (2020): mesma engenharia, custo materializado ao longo do tempo.
+      </div>
+      <p class="src">
+        Fontes: <a href="https://www.bb.com.br/site/setor-publico/federal/desenvolvimento-socioeconomico/fgo/">BB · FGO (natureza e governança)</a>;
+        <a href="https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2009/lei/l12087.htm">Lei 12.087/2009</a>;
+        <a href="https://www12.senado.leg.br/ifi/pdf/raf108_jan2026.pdf">IFI · RAF 108, jan/2026 (PDF)</a>;
+        <a href="https://www12.senado.leg.br/ifi/noticias/ifi-diz-que-arcabouco-fiscal-e-insustentavel-e-sera-colocado-em-xeque-sem-medidas-adicionais-de-ajuste">IFI · sustentabilidade do arcabouço</a>;
+        <a href="https://ndmais.com.br/politica/custo-do-desenrola-brasil-quem-paga-e-quanto-custa/">ND+ · custo fiscal e R$ 15 bi de garantia</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 6 — BANCOS === -->
+    <section id="secao6" class="section">
+      <h2>6. Ponto de vista dos bancos</h2>
+
+      <div class="thesis">
+        <span class="tag">Insight central</span>
+        <p style="margin: 6px 0 0 0;">
+          O desconto não é a notícia — bancos já renegociavam dívidas podres sozinhos (Feirão Limpa Nome, venda para FIDC, app dos próprios bancos). A notícia é o Tesouro entrar como contraparte do crédito reestruturado via FGO. O risco do reempréstimo a 1,99% a.m. sai do banco e vai para o setor público. Esse é o verdadeiro incentivo de adesão.
+        </p>
+      </div>
+
+      <h3>6.1. Status da adesão</h3>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="label">Tipo de adesão</div>
+          <div class="value" style="font-size: 16px;">Voluntária</div>
+          <div class="delta">não há obrigação legal</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Aderiram (1ª onda)</div>
+          <div class="value">6 bancos</div>
+          <div class="delta">Caixa · Nubank · BB · Bradesco · Itaú · Santander</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Estoque endereçável (BofA)</div>
+          <div class="value">R$ 100–150 bi</div>
+          <div class="delta">non-performing renegociáveis</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Famílias-alvo (Citi)</div>
+          <div class="value">~20 mi</div>
+          <div class="delta">R$ 43–64 bi de estoque</div>
+        </div>
+      </div>
+
+      <h3>6.2. Por que o desconto compensa para o banco</h3>
+      <table>
+        <thead>
+          <tr><th>Mecanismo contábil</th><th>Efeito sobre o banco</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Provisão já feita (PDD)</strong></td>
+            <td>Pela Resolução BCB 4.966 (e antes, 2.682), crédito em atraso prolongado já está provisionado em geral 100% após 360 dias e levado a prejuízo. A perda foi reconhecida em trimestres anteriores.</td>
+          </tr>
+          <tr>
+            <td><strong>Recuperação de crédito</strong></td>
+            <td>Receber 10% de uma dívida 100% provisionada vira <strong>linha positiva</strong> ("recuperação de crédito baixado para prejuízo"). Desconto de 90% ≠ perda nova.</td>
+          </tr>
+          <tr>
+            <td><strong>Reversão de provisão</strong></td>
+            <td>Reclassificação para curso normal libera PDD acumulada — aumenta lucro contábil e melhora indicadores de capital.</td>
+          </tr>
+          <tr>
+            <td><strong>Crédito novo com FGO</strong></td>
+            <td>Banco origina o reestruturado a 1,99% a.m. com garantia pública. <strong>Spread positivo, risco transferido ao Tesouro.</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Re-bancarização</strong></td>
+            <td>Cliente sai de negativado, retoma cartão, conta, seguros, investimentos — cross-sell e originação futura.</td>
+          </tr>
+          <tr>
+            <td><strong>Limpeza de carteira</strong></td>
+            <td>Libera capital regulatório (Basileia) e melhora cost of risk à frente.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>6.3. As regras foram negociadas com os bancos?</h3>
+      <p>
+        Sim, mas com fricção. Houve reuniões na Fazenda e no Planalto, a última em 04/05/2026 — dia do anúncio. Bancos relataram à imprensa que <strong>não conheciam os detalhes finais</strong> até pouco antes do lançamento. A portaria que regulamenta o FGO saiu atrasada no DOU; por isso BB, Bradesco, Itaú e Santander começaram apenas com pré-cadastro. Início marcado por falhas operacionais e risco de judicialização.
+      </p>
+      <blockquote>
+        "O fato de os bancos não conhecerem os detalhes sobre as regras do novo Desenrola até recentemente não permitiu a operacionalização prévia do programa."
+        <cite>— Representante bancário ouvido pela CNN Brasil, mai/2026</cite>
+      </blockquote>
+
+      <h3>6.4. Leitura do sell-side</h3>
+      <ul class="tight">
+        <li><strong>BofA:</strong> alívio imediato para os bancos; não resolve problema estrutural de crédito.</li>
+        <li><strong>JPMorgan:</strong> positivo no curto prazo, mas <strong>pode incentivar nova inadimplência</strong>.</li>
+        <li><strong>Citi:</strong> alcance de até 20 mi de famílias; estoque endereçável de R$ 43–64 bi.</li>
+        <li><strong>Monte Bravo:</strong> impacto "ligeiramente positivo".</li>
+      </ul>
+      <p class="src">
+        Fontes: <a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=4966">BCB · Resolução 4.966</a>;
+        <a href="https://www.cnnbrasil.com.br/economia/macroeconomia/bancos-relatam-ao-planalto-e-a-fazenda-preocupacoes-com-o-desenrola-2-0/">CNN Brasil — bancos relatam preocupações</a>;
+        <a href="https://www.metropoles.com/brasil/com-atraso-governo-publica-regras-do-desenrola-2-0-no-diario-oficialdividas-portaria-que-regulamenta-fgo-para-novo-desenrola-atrasou">Metrópoles — atraso na portaria do FGO</a>;
+        <a href="https://timesbrasil.com.br/empresas-e-negocios/bancos-podem-lucrar-ainda-mais-com-desenrola-2-0-mas-novo-ciclo-de-inadimplencia-preocupa/">Times Brasil/CNBC — bancos e Desenrola 2.0</a>;
+        <a href="https://www.infomoney.com.br/mercados/desenrola-2-0-e-positivo-para-bancos-mas-pode-incentivar-inadimplencia-diz-jpmorgan/">Infomoney — visão JPMorgan</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 7 — FGTS === -->
+    <section id="secao7" class="section">
+      <h2>7. FGTS &amp; poupança nacional</h2>
+
+      <div class="thesis">
+        <span class="tag">Tese e contraponto</span>
+        <p style="margin: 6px 0 0 0;">
+          Em chave macro, o uso do FGTS drena funding habitacional para quitar consumo passado — investimento de longo prazo virando desendividamento. Em chave microeconômica e de liberdade individual, é racional para o trabalhador arbitrar um ativo que rende 3% a.a. para liquidar passivo a três dígitos. O debate é mais nuançado do que o discurso oficial e o discurso setorial sugerem.
+        </p>
+      </div>
+
+      <h3>7.1. Magnitude da operação</h3>
+      <div class="kpi-grid">
+        <div class="kpi bad">
+          <div class="label">Saída potencial FGTS</div>
+          <div class="value">R$ 8,2 bi</div>
+          <div class="delta">limite máximo global p/ Desenrola</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Saque residual liberado</div>
+          <div class="value">R$ 7,7 bi</div>
+          <div class="delta">saldo bloqueado de aniversário</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Estimativa base ABRAINC</div>
+          <div class="value">R$ 4,5 bi</div>
+          <div class="delta">cenário central de saques</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Limite individual</div>
+          <div class="value">R$ 1 mil</div>
+          <div class="delta">ou 20% do saldo (o que for maior)</div>
+        </div>
+      </div>
+
+      <h3>7.2. A tese macro: drenagem do funding habitacional</h3>
+      <ul class="tight">
+        <li><strong>FGTS é principal fonte do SBPE/MCMV.</strong> Saída direta corta lastro do crédito imobiliário em 2026.</li>
+        <li><strong>SBPE</strong> já vinha com captação líquida negativa — Desenrola adiciona pressão no funding habitacional.</li>
+        <li><strong>Estimativas ABRAINC</strong> (cenário máximo, R$ 8,2 bi de saques):
+          <ul class="tight">
+            <li>Empregos: −59 mil a −107 mil (diretos e indiretos)</li>
+            <li>Habitação: −25 mil a −46 mil famílias sem acesso</li>
+            <li>Arrecadação: −R$ 1,4 bi a −R$ 2,4 bi</li>
+            <li>PIB: até −R$ 10,7 bi</li>
+          </ul>
+        </li>
+        <li><strong>Em linguagem macro:</strong> conversão de poupança de longo prazo (lastro habitacional) em quitação de passivo de consumo passado — efeito multiplicador inverso.</li>
+      </ul>
+
+      <h3>7.3. O contraponto: e se o FGTS não for "boa" poupança?</h3>
+      <div class="two-col">
+        <div class="scenario">
+          <h4>Argumento microeconômico</h4>
+          <p>O FGTS rende TR + 3% ao ano — perto de zero em termos reais e, em vários períodos, retorno real negativo. Quem tem dívida de cartão a 400% a.a. ou cheque especial a 12% a.m. está num arbítrio absurdo: poupando à força a 3% para servir dívida de três dígitos. Liberar saque para quitação é, do ponto de vista individual, simplesmente boa alocação de recursos.</p>
+        </div>
+        <div class="scenario">
+          <h4>Argumento de liberdade econômica</h4>
+          <p>O FGTS é instrumento coercitivo — 8% do salário do trabalhador, retidos compulsoriamente, mal remunerados, sem opt-out. Marcos Lisboa, Samuel Pessôa, Bernard Appy e Naercio Menezes Filho defendem há tempos a flexibilização: se o objetivo é proteger o trabalhador, é mais eficiente entregar o dinheiro a ele e deixá-lo escolher onde poupar. O saque-aniversário (2019) foi reconhecimento parcial dessa crítica.</p>
+        </div>
+        <div class="scenario">
+          <h4>Argumento distributivo</h4>
+          <p>O subsídio cruzado embutido é regressivo na margem — trabalhadores formais financiando, via TR + 3%, o crédito habitacional para famílias que já têm capacidade de tomar financiamento de longo prazo. A "poupança nacional habitacional" que tanto se preserva tem dono claro: ABRAINC, construtoras, sistema financeiro de habitação. Não é exatamente a poupança do trabalhador.</p>
+        </div>
+        <div class="scenario alt">
+          <h4>Linha de fundo do debate</h4>
+          <p>A leitura macro contra o programa continua válida — drena funding do crédito imobiliário, pressiona o SBPE, reduz oferta de longo prazo. Mas chamar isso de "destruição da poupança nacional" coloca em cima do trabalhador uma poupança que ele não escolheu, não controla e mal remunera. <strong>Quem decide o que é poupança e o que é direito de quem poupou?</strong></p>
+        </div>
+      </div>
+      <p class="src">
+        Fontes: <a href="https://www.gov.br/trabalho-e-emprego/pt-br/noticias-e-conteudo/2026/maio/novo-desenrola-vai-usar-ate-r-8-2-bi-do-fgts-para-quitar-dividas">Min. Trabalho — R$ 8,2 bi do FGTS</a>;
+        <a href="https://agenciagov.ebc.com.br/noticias/202605/novo-desenrola-vai-usar-ate-r-8-2-bi-do-fgts-para-quitar-dividas">Agência Gov — saque residual R$ 7,7 bi</a>;
+        <a href="https://www.infomoney.com.br/economia/desenrola-2-0-e-fgts-para-dividas-frustram-os-planos-do-setor-imobiliario-para-2026/">Infomoney — ABRAINC e setor imobiliário</a>;
+        <a href="https://amdjus.com.br/desenrola-2-0-e-fgts-setor-imobiliario-preve-atraso-nos-investimentos-em-2026/">AMD Jus — simulação ABRAINC</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 8 — RISCO MORAL === -->
+    <section id="secao8" class="section">
+      <h2>8. Risco moral &amp; punição do bom pagador</h2>
+
+      <div class="thesis">
+        <span class="tag">Tese</span>
+        <p style="margin: 6px 0 0 0;">
+          A repetição (Refis 1, 2, 4 · Desenrola 1 · Desenrola 2) institucionaliza no devedor brasileiro a expectativa racional de que sempre haverá um próximo perdão. Isso muda o comportamento de tomada de crédito futura — e penaliza, na margem, quem honrou compromissos.
+        </p>
+      </div>
+
+      <h3>8.1. O caso do bom pagador</h3>
+      <ul class="tight">
+        <li>Adimplente do Fies que pagou em dia <strong>não recebe contrapartida</strong>; inadimplente em CadÚnico tem <strong>até 99% de desconto</strong>.</li>
+        <li>Cliente bancário que renegociou na fonte por iniciativa própria não acessa o teto de 1,99% a.m.</li>
+        <li>Sinalização recorrente: <em>"vale esperar o próximo programa"</em> — efeito atestado pela elevada reincidência (~30%) na v1.</li>
+      </ul>
+
+      <h3>8.2. Vozes do debate</h3>
+      <blockquote>
+        "Desenrola vai além do risco moral e 'pune' adimplentes do Fies — quem se organizou para honrar compromissos não recebe compensação."
+        <cite>— Análise CNN Brasil, mai/2026</cite>
+      </blockquote>
+      <blockquote>
+        "A ausência de incentivo para o bom pagador e os limites de tomada de crédito podem criar risco moral: vale a pena se abster, esperando ser resgatado depois."
+        <cite>— Revista Crusoé, economistas ouvidos sobre Desenrola 2.0</cite>
+      </blockquote>
+      <blockquote>
+        "Desenrola para enrolar de novo."
+        <cite>— Idec (Instituto Brasileiro de Defesa do Consumidor), nota oficial</cite>
+      </blockquote>
+
+      <h3>8.3. Contrapontos do governo</h3>
+      <ul class="tight">
+        <li><strong>Foco social:</strong> público restrito a até 5 SM e dívidas até R$ 15 mil — exclui media e alta renda.</li>
+        <li><strong>Padronização do juro</strong> (1,99% a.m.) corrige a distorção da v1 e barateia o crédito reestruturado.</li>
+        <li><strong>Condicionalidade comportamental:</strong> bloqueio de bets por 12 meses como tentativa de quebrar ciclo de endividamento.</li>
+        <li><strong>"Desenrola dos adimplentes":</strong> a Fazenda anunciou eixo paralelo em estudo para trabalhadores informais e bons pagadores — sinaliza atenção ao tema de risco moral.</li>
+      </ul>
+      <p class="src">
+        Fontes: <a href="https://www.cnnbrasil.com.br/economia/macroeconomia/analise-desenrola-vai-alem-do-risco-moral-e-pune-adimplentes-do-fies/">CNN Brasil — análise sobre Fies</a>;
+        <a href="https://crusoe.com.br/variedades/vale-a-pena-economistas-analisam-beneficios-e-problemas-do-desenrola-2-0/">Revista Crusoé</a>;
+        <a href="https://idec.org.br/release/posicionamento-desenrola-para-enrolar-de-novo">Idec · posicionamento</a>;
+        <a href="https://agenciabrasil.ebc.com.br/economia/noticia/2026-05/governo-prepara-desenrola-para-trabalhadores-informais-e-adimplentes">Agência Brasil — Desenrola para informais e adimplentes</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 9 — HISTÓRICO === -->
+    <section id="secao9" class="section">
+      <h2>9. Histórico de programas similares</h2>
+
+      <table>
+        <thead>
+          <tr><th>Programa</th><th>Ano · Lei</th><th>Foco</th><th>Observação</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>REFIS 1</strong></td><td>2000 · Lei 9.964</td><td>Tributário PJ</td><td>Pioneiro — débitos até 02/2000</td></tr>
+          <tr><td><strong>PAES (REFIS 2)</strong></td><td>2003 · Lei 10.684</td><td>Tributário PJ/PF</td><td>Parcelamento em 180 meses</td></tr>
+          <tr><td><strong>REFIS da Crise</strong></td><td>2009 · Lei 11.941</td><td>Tributário</td><td>Vencidos até 11/2008</td></tr>
+          <tr><td><strong>Lei 9.496/97</strong></td><td>1997/2000</td><td>Dívida estados/DF</td><td>Renegociação federativa estrutural</td></tr>
+          <tr><td><strong>Refis Estaduais</strong></td><td>recorrente</td><td>ICMS</td><td>PR/2024: R$ 2,6 bi renegociados</td></tr>
+          <tr><td><strong>PERSE</strong></td><td>2021 · LC 14.148</td><td>Setor de eventos</td><td>Setorial pós-pandemia</td></tr>
+          <tr><td><strong>Pronampe</strong></td><td>2020 · Lei 13.999</td><td>Crédito MPE</td><td>Mesma engenharia FGO — precedente do Desenrola</td></tr>
+          <tr><td><strong>Desenrola Brasil</strong></td><td>2023 · MP 1.176</td><td>PF inadimplente</td><td>Primeira versão</td></tr>
+          <tr><td><strong>Novo Desenrola</strong></td><td>2026 · MP 1.355</td><td>PF / MEI / PME / Fies / rural</td><td>Em vigor</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        A literatura crítica do REFIS (Receita Federal; IBRE/FGV) aponta que a repetição sistemática desses programas <strong>sinaliza ao contribuinte e ao devedor a expectativa racional de novos perdões futuros</strong> — tema central do debate sobre risco moral institucional e estabilidade da política tributária e creditícia brasileira.
+      </p>
+      <p class="src">
+        Fontes: <a href="https://www.portaltributario.com.br/guia/refis.html">Portal Tributário · Guia REFIS</a>;
+        <a href="https://observatorio-politica-fiscal.ibre.fgv.br/federalismo-fiscal/endividamento-dos-estados/endividamento-dos-estados-e-historico-de-renegociacoes">IBRE/FGV · Observatório de Política Fiscal</a>;
+        <a href="https://www.fazenda.pr.gov.br/Noticia/Mais-de-R-26-bilhoes-em-dividas-foram-renegociadas-pelo-Refis-em-2024">SEFA-PR · Refis 2024</a>.
+      </p>
+    </section>
+
+    <!-- === SEÇÃO 10 — COMENTÁRIO === -->
+    <section id="secao10" class="section">
+      <h2>10. Comentário consolidado</h2>
+
+      <div class="thesis">
+        <span class="tag">Versão de TV — uso ao vivo</span>
+        <p style="margin: 6px 0 0 0;">
+          Texto curto preparado para fala em participação ao vivo. Densidade de conteúdo calibrada para ~1 minuto e meio.
+        </p>
+      </div>
+
+      <div class="commentary">
+        <p>
+          O Desenrola alivia, mas não resolve. Na versão de 2023, o próprio Banco Central mostrou que cada real renegociado virou R$ 1,15 em novas dívidas, e quase um terço dos beneficiados voltou a atrasar em menos de um ano. Atacar o estoque sem mexer no fluxo — juro alto, renda apertada, crédito caro — é anestésico, não cura.
+        </p>
+        <p>
+          No fiscal, o desenho é esperto: o Tesouro não gasta nada agora, garante tudo via FGO, e a conta só aparece em 2027 ou 2028, no colo da próxima gestão. O FGTS é o ponto mais subestimado do debate: até R$ 8,2 bilhões saem do funding do crédito imobiliário para quitar dívida de consumo, com a ABRAINC estimando perda de até 107 mil empregos e R$ 10,7 bilhões de PIB.
+        </p>
+        <p>
+          E ainda há o risco moral de mais um perdão na fila do Refis e do Desenrola 1, a sinalização ruim para quem pagou em dia, e a transferência silenciosa de risco dos bancos para o Tesouro — eles convertem provisão em recuperação contábil e originam crédito novo com a União segurando a ponta.
+        </p>
+        <p>
+          <strong>Alívio no curto prazo, sim. Estrutura, nenhuma.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- === SEÇÃO 11 — PONTOS ABERTOS === -->
+    <section id="secao11" class="section">
+      <h2>11. Pontos abertos para o debate</h2>
+
+      <div class="two-col">
+        <div class="scenario">
+          <h4>Macro &amp; fiscal</h4>
+          <ul class="tight">
+            <li>Por que o juro de 1,99% a.m. (≈ 26,8% a.a.) está acima da Selic e qual o spread embutido para os bancos?</li>
+            <li>Que parcela da garantia FGO efetivamente não retorna ao Tesouro e quando essa despesa aparece no primário?</li>
+            <li>O programa é compatível com o arcabouço fiscal e a meta de primário 2026? Há mensuração no PLOA/PLDO?</li>
+            <li>Qual a elasticidade real de saque do FGTS frente a dívidas de R$ 1 mil? ABRAINC usa R$ 8,2 bi como teto, realizado pode ser bem menor.</li>
+            <li>Qual efeito sobre a caderneta SBPE e o crédito imobiliário 2026/27 — gatilho para nova fonte de funding (LCI/LIG)?</li>
+          </ul>
+        </div>
+        <div class="scenario">
+          <h4>Institucional &amp; comportamental</h4>
+          <ul class="tight">
+            <li>Como o programa dialoga com o Marco do Superendividamento (Lei 14.181/2021), que já oferece via judicial gratuita?</li>
+            <li>O bloqueio de bets por 12 meses é fiscalizável? Há base legal para checar e penalizar burla?</li>
+            <li>Há risco de uma terceira onda de Desenrola em 2027/28? Que sinal de política econômica isso passa ao mercado de crédito?</li>
+            <li>Como mensurar o desincentivo ao adimplente e o impacto sobre originação futura?</li>
+            <li>Bancos privados aderem com a mesma intensidade da v1 ou há fricção dada a queda de spread? Observar adesão inicial.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- === FONTES E GLOSSÁRIO === -->
+    <section id="fontes" class="section">
+      <h2>N. Fontes, glossário &amp; notas metodológicas</h2>
+
+      <h3>Fontes primárias e oficiais</h3>
+      <ul class="tight">
+        <li><strong>Ministério da Fazenda:</strong> <a href="https://www.gov.br/fazenda/pt-br/acesso-a-informacao/acoes-e-programas/novo-desenrola-brasil">portal Novo Desenrola Brasil</a> · <a href="https://www.gov.br/fazenda/pt-br/assuntos/noticias/2026/maio/presidente-lula-assina-mp-do-novo-desenrola-com-foco-na-recuperacao-financeira-de-familias-estudantes-e-pequenos-empreendedores">notícia da assinatura da MP, 04/05/2026</a>.</li>
+        <li><strong>Casa Civil:</strong> <a href="https://www.gov.br/casacivil/pt-br/assuntos/noticias/2026/maio/novo-desenrola-do-governo-do-brasil-preve-ate-90-de-desconto-e-facilita-renegociacao-de-dividas">comunicado do programa</a>.</li>
+        <li><strong>Ministério do Trabalho:</strong> <a href="https://www.gov.br/trabalho-e-emprego/pt-br/noticias-e-conteudo/2026/maio/novo-desenrola-vai-usar-ate-r-8-2-bi-do-fgts-para-quitar-dividas">FGTS — R$ 8,2 bi</a>.</li>
+        <li><strong>MEC:</strong> <a href="https://www.gov.br/mec/pt-br/fies/desenrola-fies">Desenrola Fies</a>.</li>
+        <li><strong>Banco Central:</strong> <a href="https://www.bcb.gov.br/content/ri/relatorioinflacao/202509/rpm202509b6p.pdf">Relatório de Inflação set/2025 — box sobre Desenrola</a> · <a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=4966">Resolução 4.966</a>.</li>
+        <li><strong>BB · FGO:</strong> <a href="https://www.bb.com.br/site/setor-publico/federal/desenvolvimento-socioeconomico/fgo/">portal do Fundo Garantidor de Operações</a>.</li>
+        <li><strong>Lei 12.087/2009:</strong> <a href="https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2009/lei/l12087.htm">criação dos fundos garantidores</a>.</li>
+        <li><strong>IFI:</strong> <a href="https://www12.senado.leg.br/ifi/pdf/raf108_jan2026.pdf">RAF 108, jan/2026 (PDF)</a> · <a href="https://www12.senado.leg.br/ifi/noticias/ifi-diz-que-arcabouco-fiscal-e-insustentavel-e-sera-colocado-em-xeque-sem-medidas-adicionais-de-ajuste">arcabouço insustentável</a>.</li>
+        <li><strong>IBRE/FGV:</strong> <a href="https://observatorio-politica-fiscal.ibre.fgv.br/federalismo-fiscal/endividamento-dos-estados/endividamento-dos-estados-e-historico-de-renegociacoes">Observatório de Política Fiscal · histórico de renegociações</a>.</li>
+      </ul>
+
+      <h3>Análises técnicas e de mercado</h3>
+      <ul class="tight">
+        <li><strong>CNN Brasil:</strong> <a href="https://www.cnnbrasil.com.br/economia/macroeconomia/bancos-relatam-ao-planalto-e-a-fazenda-preocupacoes-com-o-desenrola-2-0/">bancos relatam preocupações</a> · <a href="https://www.cnnbrasil.com.br/economia/macroeconomia/analise-desenrola-vai-alem-do-risco-moral-e-pune-adimplentes-do-fies/">análise sobre Fies e risco moral</a>.</li>
+        <li><strong>Infomoney:</strong> <a href="https://www.infomoney.com.br/mercados/desenrola-2-0-e-positivo-para-bancos-mas-pode-incentivar-inadimplencia-diz-jpmorgan/">JPMorgan</a> · <a href="https://www.infomoney.com.br/economia/desenrola-2-0-e-fgts-para-dividas-frustram-os-planos-do-setor-imobiliario-para-2026/">ABRAINC e setor imobiliário</a>.</li>
+        <li><strong>Times Brasil/CNBC:</strong> <a href="https://timesbrasil.com.br/empresas-e-negocios/bancos-podem-lucrar-ainda-mais-com-desenrola-2-0-mas-novo-ciclo-de-inadimplencia-preocupa/">bancos podem lucrar mais com Desenrola 2.0</a>.</li>
+        <li><strong>Revista Crusoé:</strong> <a href="https://crusoe.com.br/variedades/vale-a-pena-economistas-analisam-beneficios-e-problemas-do-desenrola-2-0/">economistas analisam Desenrola 2.0</a>.</li>
+        <li><strong>Idec:</strong> <a href="https://idec.org.br/release/posicionamento-desenrola-para-enrolar-de-novo">posicionamento oficial</a>.</li>
+        <li><strong>ND+:</strong> <a href="https://ndmais.com.br/politica/custo-do-desenrola-brasil-quem-paga-e-quanto-custa/">custo fiscal e exposição de R$ 15 bi</a>.</li>
+        <li><strong>Metrópoles:</strong> <a href="https://www.metropoles.com/brasil/com-atraso-governo-publica-regras-do-desenrola-2-0-no-diario-oficialdividas-portaria-que-regulamenta-fgo-para-novo-desenrola-atrasou">atraso na portaria do FGO</a>.</li>
+      </ul>
+
+      <h3>Glossário</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>FGO</strong></td><td>Fundo Garantidor de Operações. Fundo de natureza privada, administrado pelo Banco do Brasil, criado pela Lei 12.087/2009. Cotistas são o Tesouro Nacional e instituições financeiras. Garante operações de crédito, evitando que a perda do banco vire imediatamente despesa primária do Tesouro.</td></tr>
+          <tr><td><strong>PDD</strong></td><td>Provisão para Devedores Duvidosos. Reserva contábil que o banco constitui para cobrir perdas esperadas com inadimplência, conforme Resolução BCB 4.966 (e antes, 2.682).</td></tr>
+          <tr><td><strong>SBPE</strong></td><td>Sistema Brasileiro de Poupança e Empréstimo. Conjunto de instituições que captam recursos da caderneta de poupança e os destinam, em parte, ao financiamento imobiliário.</td></tr>
+          <tr><td><strong>PEIC</strong></td><td>Pesquisa de Endividamento e Inadimplência do Consumidor, da CNC.</td></tr>
+          <tr><td><strong>Arcabouço fiscal</strong></td><td>Novo regime fiscal vigente desde 2023 (LC 200/2023). Define meta de resultado primário com banda de tolerância e limita o crescimento real das despesas primárias.</td></tr>
+          <tr><td><strong>Risco moral</strong></td><td>Comportamento de maior risco adotado por agentes que antecipam serem beneficiados ou socorridos no futuro.</td></tr>
+          <tr><td><strong>Operação financeira</strong></td><td>Classificação contábil "abaixo da linha" no resultado fiscal — não afeta o resultado primário do governo central.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Notas metodológicas</h3>
+      <ul class="tight">
+        <li>Dados sobre o programa retirados exclusivamente de fontes oficiais (gov.br, BCB, BB) e cobertura jornalística do anúncio em 04/05/2026.</li>
+        <li>Indicadores de endividamento e inadimplência referem-se a mar/2026 (PEIC/CNC e Serasa) e fev/2026 (BCB/SCR). Devem ser confirmados nas fontes primárias antes de uso ao vivo.</li>
+        <li>Estimativas de impacto setorial (ABRAINC) referem-se a cenários de saque do FGTS entre R$ 4,5 bi (base) e R$ 8,2 bi (teto global).</li>
+        <li>Resultados da v1 (Desenrola 2023) têm como fonte primária o box do Relatório de Inflação do BCB de set/2025.</li>
+        <li>A estimativa de R$ 67 bi de gap fiscal é da IFI · RAF 108, jan/2026.</li>
+      </ul>
+
+      <p class="src" style="margin-top: 24px;">
+        Painel preparado para uso interno · Material de preparação para participação em TV · Maio/2026.
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<!-- === NAVEGAÇÃO JS === -->
+<script>
+  const links = document.querySelectorAll('.navlink');
+  const sections = document.querySelectorAll('.section');
+  function show(hash) {
+    const id = hash.replace('#', '');
+    sections.forEach(s => s.classList.toggle('active', s.id === id));
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+  links.forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    history.replaceState(null, '', a.getAttribute('href'));
+    show(a.getAttribute('href'));
+  }));
+  if (window.location.hash) show(window.location.hash);
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+PAPEL
+Você é um comentarista de economia para TV, especializado em política fiscal e finanças publicas. Seu objetivo é montar um painel de análise completo sobre o novo Desenrola lançado pelo governo federal em maio de 2026.
+TAREFA
+Crie um painel HTML único, autocontido, no estilo visual Bloomberg Terminal — fundo escuro, tipografia monospace, dados em destaque, paleta limitada (verde/âmbar/branco sobre preto). O painel deve ser denso em informação, organizado em seções temáticas, para consulta pessoal antes de uma participação na TV.
+PESQUISA — OBRIGATÓRIO
+Antes de escrever qualquer linha de HTML, use a ferramenta de web search para buscar informações atualizadas sobre o programa. Faça buscas direcionadas, por exemplo:
+
+Desenrola 2026 regras oficiais site:gov.br
+Desenrola 2026 críticas
+Desenrola 2026 inadimplência endividamento famílias
+Desenrola 2026 impacto fiscal
+
+Use somente fontes oficiais para dados do programa (gov.br, Banco Central, Ministério da Fazenda, Tesouro Nacional, IBGE, Serasa/dados primários). Para opiniões, análises de mérito e avaliações econômicas, pode usar fontes técnicas e acadêmicas — mas cite explicitamente a fonte e o autor no painel.
+
+SEÇÕES MÍNIMAS (organize e pondere o espaço conforme a relevância do conteúdo encontrado)
+
+Visão geral e regras do programa
+Racional econômico da medida
+Comparação com o Desenrola 2023 (diferenças e semelhanças)
+Iniciativas similares no passado recente
+Nível de endividamento das famílias (contexto macro)
+Impacto esperado sobre a economia
+Impacto sobre as contas públicas
+Uso do FGTS e impacto sobre a poupança do país
+Risco moral — penaliza o bom pagador?
+Pontos de atenção e perguntas abertas para o debate
+
+RESTRIÇÕES
+
+HTML único, sem dependências externas, sem frameworks
+Todo dado quantitativo deve ter fonte e data citadas inline
+Se uma informação não for encontrada nas buscas, sinalize explicitamente como [DADO NÃO LOCALIZADO — verificar] em vez de inventar
+Não use conhecimento de treinamento para fatos sobre este programa específico — tudo deve vir das buscas
+
+DOCUMENTAÇÃO
+Ao final, salve este prompt completo em um arquivo prompt.txt dentro de uma pasta docs/ no projeto. Isso serve como registro da instrução original para referência futura.

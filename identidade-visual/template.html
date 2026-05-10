@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="[Descrição do painel]">
+<title>[Título do Painel]</title>
+<style>
+  /* === TOKENS DE IDENTIDADE VISUAL === */
+  :root {
+    --bg:     #ffffff;
+    --panel:  #f7f7f5;
+    --ink:    #1a1a1a;
+    --muted:  #5b5b5b;
+    --accent: #003d6b;
+    --warn:   #b8460e;
+    --good:   #1f6e3d;
+    --bad:    #a4243b;
+    --line:   #d8d8d4;
+    --hl:     #fff7d6;
+  }
+
+  /* === RESET E BASE === */
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px; line-height: 1.5;
+  }
+
+  /* === LAYOUT === */
+  .layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  main { padding: 28px 36px; max-width: 1100px; }
+
+  /* === NAV LATERAL === */
+  nav {
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 18px 0;
+    position: sticky; top: 0;
+    height: 100vh; overflow-y: auto;
+  }
+  nav .brand { padding: 0 18px; margin-bottom: 18px; }
+  nav .brand img { max-width: 160px; display: block; margin-bottom: 8px; }
+  nav h1 { font-size: 13px; margin: 0 0 2px 0; color: var(--accent); letter-spacing: 0.5px; }
+  nav .sub { font-size: 11px; color: var(--muted); }
+  nav ul { list-style: none; margin: 0; padding: 0; }
+  nav li a {
+    display: block; padding: 8px 18px;
+    color: var(--ink); text-decoration: none; font-size: 13px;
+    border-left: 3px solid transparent;
+  }
+  nav li a:hover { background: #ececea; }
+  nav li a.active { background: #ececea; border-left-color: var(--accent); font-weight: 600; }
+
+  /* === TIPOGRAFIA === */
+  h2 {
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 6px; margin-top: 0; font-size: 22px;
+  }
+  h3 { color: var(--ink); margin-top: 28px; font-size: 16px; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  h4 { font-size: 14px; margin: 18px 0 6px 0; color: var(--accent); }
+
+  /* === SEÇÕES === */
+  .section { display: none; }
+  .section.active { display: block; }
+  .header-bar { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .meta { font-size: 11px; color: var(--muted); }
+
+  /* === KPI CARDS === */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px; margin: 14px 0;
+  }
+  .kpi {
+    background: var(--panel); padding: 12px;
+    border-left: 4px solid var(--accent); border-radius: 3px;
+  }
+  .kpi.warn { border-left-color: var(--warn); }
+  .kpi.bad  { border-left-color: var(--bad); }
+  .kpi.good { border-left-color: var(--good); }
+  .kpi .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi .value { font-size: 22px; font-weight: 700; color: var(--ink); margin: 4px 0; font-variant-numeric: tabular-nums; }
+  .kpi .delta { font-size: 11px; color: var(--muted); }
+
+  /* === TABELAS === */
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; }
+  th, td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { background: var(--panel); font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* === CALLOUT === */
+  .callout {
+    background: var(--hl); border-left: 4px solid var(--warn);
+    padding: 12px 16px; margin: 14px 0; border-radius: 3px;
+  }
+  .callout strong { color: var(--warn); }
+
+  /* === THESIS BOX === */
+  .thesis {
+    background: #eef4f8; border: 1px solid var(--accent);
+    padding: 14px 18px; margin: 16px 0; border-radius: 4px;
+  }
+  .thesis .tag { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+  /* === CENÁRIOS === */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 16px 0; }
+  .scenario { background: var(--panel); padding: 14px; border-radius: 4px; border-top: 4px solid var(--accent); }
+  .scenario.alt { border-top-color: var(--warn); }
+  .scenario h4 { margin-top: 0; }
+
+  /* === GRID 3 COLUNAS === */
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .grid-3 .col { background: var(--panel); padding: 10px 12px; border-radius: 3px; font-size: 12px; }
+  .grid-3 .col strong { color: var(--accent); display: block; margin-bottom: 4px; font-size: 13px; }
+
+  /* === PILLS DE RATING === */
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .pill.green { background: #d4ead6; color: #1f5a31; }
+  .pill.red   { background: #f0d4d8; color: #6b1f2c; }
+  .pill.bb    { background: #fde8d4; color: #6b3410; }
+  .pill.ba1   { background: #fde8d4; color: #6b3410; }
+
+  /* === FÓRMULAS === */
+  .formula {
+    font-family: "Cambria Math", Georgia, serif; font-style: italic; font-size: 16px;
+    background: var(--panel); padding: 8px 12px; border-radius: 3px; display: inline-block;
+  }
+
+  /* === UTILITÁRIOS === */
+  ul.tight { margin: 6px 0; padding-left: 22px; }
+  ul.tight li { margin: 3px 0; }
+  .src { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 6px; }
+  svg { max-width: 100%; height: auto; }
+
+  /* === RESPONSIVO === */
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    nav { position: relative; height: auto; }
+    main { padding: 16px; }
+    .two-col, .grid-3 { grid-template-columns: 1fr; }
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+
+  /* === PRINT === */
+  @media print {
+    nav { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    .section { display: block !important; page-break-after: always; }
+    p, li { orphans: 3; widows: 3; }
+    h2, h3, h4 { page-break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- === NAV LATERAL === -->
+  <nav>
+    <div class="brand">
+      <!-- Se houver logo: <img src="logo.svg" alt="Logo"> -->
+      <h1>[TÍTULO DO PROJETO]</h1>
+      <div class="sub">[Subtítulo ou data de referência]</div>
+    </div>
+    <ul>
+      <li><a href="#secao1" class="navlink active">1. [Seção 1]</a></li>
+      <li><a href="#secao2" class="navlink">2. [Seção 2]</a></li>
+      <li><a href="#secao3" class="navlink">3. [Seção 3]</a></li>
+      <li><a href="#fontes" class="navlink">N. Fontes & Glossário</a></li>
+    </ul>
+  </nav>
+
+  <!-- === CONTEÚDO PRINCIPAL === -->
+  <main>
+
+    <!-- === SEÇÃO 1 === -->
+    <section id="secao1" class="section active">
+      <div class="header-bar">
+        <h2>1. [Título da Seção]</h2>
+        <span class="meta">[Referência de dados]</span>
+      </div>
+
+      <!-- Thesis box: use para a tese central ou bottom line -->
+      <div class="thesis">
+        <span class="tag">Bottom line</span>
+        <p style="margin: 6px 0 0 0;">[Tese principal da seção.]</p>
+      </div>
+
+      <!-- KPI cards -->
+      <h3>Indicadores-chave</h3>
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="label">Indicador</div>
+          <div class="value">00,0%</div>
+          <div class="delta">variação · referência</div>
+        </div>
+        <div class="kpi good">
+          <div class="label">Positivo</div>
+          <div class="value">+0,0%</div>
+          <div class="delta">contexto</div>
+        </div>
+        <div class="kpi warn">
+          <div class="label">Atenção</div>
+          <div class="value">0,0%</div>
+          <div class="delta">contexto</div>
+        </div>
+        <div class="kpi bad">
+          <div class="label">Negativo</div>
+          <div class="value">0,0%</div>
+          <div class="delta">contexto</div>
+        </div>
+      </div>
+
+      <!-- Callout de destaque -->
+      <div class="callout">
+        <strong>Atenção:</strong> [Mensagem de alerta ou destaque crítico.]
+      </div>
+
+      <!-- Tabela -->
+      <h3>Tabela de dados</h3>
+      <table>
+        <thead>
+          <tr><th>Item</th><th>2023</th><th>2024</th><th>2025</th><th class="num">Var.</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Linha A</td><td class="num">0,0</td><td class="num">0,0</td><td class="num">0,0</td><td class="num">+0,0</td></tr>
+          <tr><td>Linha B</td><td class="num">0,0</td><td class="num">0,0</td><td class="num">0,0</td><td class="num">+0,0</td></tr>
+        </tbody>
+      </table>
+      <p class="src">Fonte: [Fonte dos dados]</p>
+    </section>
+
+    <!-- === SEÇÃO 2 === -->
+    <section id="secao2" class="section">
+      <h2>2. [Título da Seção]</h2>
+
+      <!-- Cenários em duas colunas -->
+      <div class="two-col">
+        <div class="scenario">
+          <h4>Cenário Base</h4>
+          <p>[Descrição do cenário base.]</p>
+        </div>
+        <div class="scenario alt">
+          <h4>Cenário Alternativo</h4>
+          <p>[Descrição do cenário alternativo.]</p>
+        </div>
+      </div>
+
+      <!-- Grid de 3 colunas -->
+      <div class="grid-3">
+        <div class="col"><strong>Coluna A</strong>Conteúdo A</div>
+        <div class="col"><strong>Coluna B</strong>Conteúdo B</div>
+        <div class="col"><strong>Coluna C</strong>Conteúdo C</div>
+      </div>
+    </section>
+
+    <!-- === SEÇÃO 3 === -->
+    <section id="secao3" class="section">
+      <h2>3. [Título da Seção]</h2>
+      <p>[Conteúdo da seção.]</p>
+    </section>
+
+    <!-- === FONTES & GLOSSÁRIO === -->
+    <section id="fontes" class="section">
+      <h2>N. Fontes, Glossário & Notas Metodológicas</h2>
+
+      <h3>Fontes primárias</h3>
+      <ul class="tight">
+        <li><strong>[Fonte 1]:</strong> [Descrição e séries utilizadas].</li>
+        <li><strong>[Fonte 2]:</strong> [Descrição e séries utilizadas].</li>
+      </ul>
+
+      <h3>Glossário</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>TERMO</strong></td><td>Definição do termo.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Notas metodológicas</h3>
+      <ul class="tight">
+        <li>[Nota sobre metodologia ou limitações dos dados.]</li>
+      </ul>
+
+      <p class="src" style="margin-top: 24px;">Painel preparado por [Autor]. Dados até [data de corte].</p>
+    </section>
+
+  </main>
+</div>
+
+<!-- === NAVEGAÇÃO JS === -->
+<script>
+  const links = document.querySelectorAll('.navlink');
+  const sections = document.querySelectorAll('.section');
+  function show(hash) {
+    const id = hash.replace('#', '');
+    sections.forEach(s => s.classList.toggle('active', s.id === id));
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+  links.forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    history.replaceState(null, '', a.getAttribute('href'));
+    show(a.getAttribute('href'));
+  }));
+  if (window.location.hash) show(window.location.hash);
+</script>
+</body>
+</html>
